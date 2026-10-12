@@ -1,10 +1,9 @@
 node_modules
 dist
 
-# local env files and Netlify CLI state
+# local env files
 .env*
 !.env.example
-.netlify
 
 # OS and TypeScript build cache
 .DS_Store
