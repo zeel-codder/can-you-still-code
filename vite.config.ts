@@ -3,12 +3,11 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 /**
- * The site's own address, as Netlify reports it during the build: the production URL (custom domain if set)
- * or the branch / deploy-preview URL. Empty locally, which leaves the link-preview URLs relative.
+ * The site's own address, e.g. https://example.com, from the SITE_URL environment variable at build time.
+ * Empty when unset, which leaves the link-preview URLs relative.
  */
-function netlifySiteUrl(): string {
-  const { CONTEXT, URL, DEPLOY_PRIME_URL } = process.env
-  return (CONTEXT === 'production' ? URL : (DEPLOY_PRIME_URL ?? URL)) ?? ''
+function siteUrl(): string {
+  return (process.env.SITE_URL ?? '').replace(/\/$/, '')
 }
 
 export default defineConfig({
@@ -18,7 +17,7 @@ export default defineConfig({
     {
       // Link-preview crawlers need absolute URLs, so fill the site's address into index.html at build time.
       name: 'site-origin',
-      transformIndexHtml: (html) => html.replaceAll('__SITE_ORIGIN__', netlifySiteUrl()),
+      transformIndexHtml: (html) => html.replaceAll('__SITE_ORIGIN__', siteUrl()),
     },
   ],
   test: {

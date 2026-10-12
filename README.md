@@ -11,19 +11,13 @@ npm test         # checks every level's solution, the predict answers and the sc
 npm run build    # static site in dist/
 ```
 
-## Deploy (Netlify)
+## Deploy
 
-1. On Netlify: **Add new site → Import an existing project → GitHub →** pick this repo.
-2. Leave the settings alone: `netlify.toml` already sets the build command (`npm test && npm run build`), the `dist` folder and Node 22.
-3. Optional: **Domain management → Add a domain** for a custom (sub)domain, then trigger a redeploy so link previews use it.
-
-Every push to `main` redeploys automatically, and pull requests get their own preview URL. Tests run first, so a failing commit never goes live.
-
-No domain is hard-coded: the share card and share text use the page's own address, and the link-preview tags get the site's address from Netlify during the build.
+`npm run build` produces a plain static site in `dist/` that any static host can serve. Set `SITE_URL` (e.g. `https://example.com`) during the build so link previews get absolute URLs.
 
 ## Link previews
 
-`index.html` has Open Graph and X/Twitter card tags, so links show a rich preview on WhatsApp, X, LinkedIn, Facebook, Discord, Slack, Telegram and iMessage. Crawlers need absolute URLs, so the tags use a `__SITE_ORIGIN__` placeholder that `vite.config.ts` replaces with Netlify's `URL` (production) or `DEPLOY_PRIME_URL` (branch and preview deploys). Local builds leave them relative. The preview image is `public/og-image.png` (1200×630). After deploying, you can check the preview with LinkedIn's Post Inspector, Facebook's Sharing Debugger or opengraph.xyz.
+`index.html` has Open Graph and X/Twitter card tags, so links show a rich preview on WhatsApp, X, LinkedIn, Facebook, Discord, Slack, Telegram and iMessage. Crawlers need absolute URLs, so the tags use a `__SITE_ORIGIN__` placeholder that `vite.config.ts` replaces with the `SITE_URL` environment variable. Local builds leave them relative. The preview image is `public/og-image.png` (1200×630). After deploying, you can check the preview with LinkedIn's Post Inspector, Facebook's Sharing Debugger or opengraph.xyz.
 
 ## Adding a level
 
