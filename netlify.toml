@@ -1,9 +1,21 @@
+# Netlify reads this automatically when the GitHub repo is connected; no settings to type in the UI.
 
 [build]
-  command = "npm run build"
+  # Tests run first, so a broken commit never goes live.
+  command = "npm test && npm run build"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "22"
+
+# The whole game lives on one page; send any unknown path to it instead of a 404.
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Bundles in /assets have content hashes in their names, so they can be cached forever.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

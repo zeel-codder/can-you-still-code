@@ -11,15 +11,19 @@ npm test         # checks every level's solution, the predict answers and the sc
 npm run build    # static site in dist/
 ```
 
-## Deploy
+## Deploy (Netlify)
 
-Deploys to Cloudflare Workers: `npm run deploy`. `npm run preview` builds and runs it locally with Wrangler.
+1. On Netlify: **Add new site → Import an existing project → GitHub →** pick this repo.
+2. Leave the settings alone: `netlify.toml` already sets the build command (`npm test && npm run build`), the `dist` folder and Node 22.
+3. Optional: **Domain management → Add a domain** for a custom (sub)domain, then trigger a redeploy so link previews use it.
 
-No domain is hard-coded. The share card and share text use the page's own address, and a tiny Worker (`worker/index.ts`) fills the site's address into the link-preview tags for whatever domain serves it. Point any domain or subdomain at the Worker and previews just work.
+Every push to `main` redeploys automatically, and pull requests get their own preview URL. Tests run first, so a failing commit never goes live.
+
+No domain is hard-coded: the share card and share text use the page's own address, and the link-preview tags get the site's address from Netlify during the build.
 
 ## Link previews
 
-`index.html` has Open Graph and X/Twitter card tags, so links show a rich preview on WhatsApp, X, LinkedIn, Facebook, Discord, Slack, Telegram and iMessage. Crawlers need absolute URLs, so the tags use a `__SITE_ORIGIN__` placeholder that the Worker replaces on each request. The preview image is `public/og-image.png` (1200×630). After deploying, you can check the preview with LinkedIn's Post Inspector, Facebook's Sharing Debugger or opengraph.xyz.
+`index.html` has Open Graph and X/Twitter card tags, so links show a rich preview on WhatsApp, X, LinkedIn, Facebook, Discord, Slack, Telegram and iMessage. Crawlers need absolute URLs, so the tags use a `__SITE_ORIGIN__` placeholder that `vite.config.ts` replaces with Netlify's `URL` (production) or `DEPLOY_PRIME_URL` (branch and preview deploys). Local builds leave them relative. The preview image is `public/og-image.png` (1200×630). After deploying, you can check the preview with LinkedIn's Post Inspector, Facebook's Sharing Debugger or opengraph.xyz.
 
 ## Adding a level
 

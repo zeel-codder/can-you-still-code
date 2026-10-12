@@ -1,12 +1,10 @@
 node_modules
 dist
 
-# wrangler files
-.wrangler
-.dev.vars*
-!.dev.vars.example
+# local env files and Netlify CLI state
 .env*
 !.env.example
+.netlify
 
 # OS and TypeScript build cache
 .DS_Store
